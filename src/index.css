@@ -1,0 +1,44 @@
+/* 글로벌 리셋 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #080c14;
+  color: #e2e8f0;
+  font-family: 'Pretendard Variable', 'Pretendard', 'Noto Sans KR', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 스크롤바 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f1623;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2d45;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+/* input, select, textarea 기본 스타일 초기화 */
+input, select, textarea, button {
+  font-family: inherit;
+}
+
+/* nav 스크롤바 숨김 */
+nav::-webkit-scrollbar {
+  display: none;
+}
+nav {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
