@@ -1,0 +1,4 @@
+  btn:      (color: string = C.accent): React.CSSProperties => ({ background: color, color: "#000", border: "none", borderRadius: 9, padding: "9px 18px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
+  btnGhost: (color: string = C.accent): React.CSSProperties => ({ background: "transparent", color, border: `1px solid ${color}55`, borderRadius: 9, padding: "8px 14px", fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
+  badge:    (color: string): React.CSSProperties => ({ background: color + "20", color, border: `1px solid ${color}40`, borderRadius: 6, padding: "2px 8px", fontSize: 11, fontWeight: 700, display: "inline-block", whiteSpace: "nowrap" as const }),
+  postCard: (accent: string = C.accent): React.CSSProperties => ({ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "1rem 1.2rem", marginBottom: 10 }),

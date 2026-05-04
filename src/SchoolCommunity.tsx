@@ -31,21 +31,21 @@ const C = {
   bg: "#080c14", surface: "#0f1623", card: "#141d2e", border: "#1e2d45",
   accent: "#38bdf8", purple: "#a78bfa", green: "#34d399", yellow: "#fbbf24",
   red: "#f87171", text: "#e2e8f0", muted: "#64748b", dim: "#94a3b8",
-} as const;
+};
 
 const css = {
-  app:  { minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Pretendard Variable','Pretendard','Noto Sans KR',sans-serif" } as React.CSSProperties,
-  nav:  { background: C.surface, borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", overflowX: "auto" as const, position: "sticky" as const, top: 0, zIndex: 100, padding: "0 12px", gap: 2 } as React.CSSProperties,
-  logo: { padding: "14px 10px", fontWeight: 800, fontSize: 17, color: C.accent, whiteSpace: "nowrap" as const, flexShrink: 0, marginRight: 6 } as React.CSSProperties,
-  tab:  (a: boolean): React.CSSProperties => ({ padding: "14px 11px", fontSize: 13, fontWeight: a ? 700 : 400, color: a ? C.accent : C.muted, borderBottom: `2px solid ${a ? C.accent : "transparent"}`, background: "none", border: "none", cursor: "pointer", whiteSpace: "nowrap", fontFamily: "inherit", transition: "color 0.15s" }),
-  page: { maxWidth: 880, margin: "0 auto", padding: "2rem 1rem" } as React.CSSProperties,
-  card: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "1.25rem" } as React.CSSProperties,
-  input: { background: "#0a1220", border: `1px solid ${C.border}`, borderRadius: 9, padding: "10px 14px", color: C.text, fontSize: 14, width: "100%", outline: "none", fontFamily: "inherit", boxSizing: "border-box" as const } as React.CSSProperties,
-  label: { fontSize: 12, color: C.dim, marginBottom: 5, display: "block", fontWeight: 500 } as React.CSSProperties,
-  btn:      (color = C.accent): React.CSSProperties => ({ background: color, color: "#000", border: "none", borderRadius: 9, padding: "9px 18px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
-  btnGhost: (color = C.accent): React.CSSProperties => ({ background: "transparent", color, border: `1px solid ${color}55`, borderRadius: 9, padding: "8px 14px", fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
+  app:      { minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Pretendard Variable','Pretendard','Noto Sans KR',sans-serif" } as React.CSSProperties,
+  nav:      { background: C.surface, borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", overflowX: "auto" as const, position: "sticky" as const, top: 0, zIndex: 100, padding: "0 12px", gap: 2 } as React.CSSProperties,
+  logo:     { padding: "14px 10px", fontWeight: 800, fontSize: 17, color: C.accent, whiteSpace: "nowrap" as const, flexShrink: 0, marginRight: 6 } as React.CSSProperties,
+  tab:      (a: boolean): React.CSSProperties => ({ padding: "14px 11px", fontSize: 13, fontWeight: a ? 700 : 400, color: a ? C.accent : C.muted, borderBottom: `2px solid ${a ? C.accent : "transparent"}`, background: "none", border: "none", cursor: "pointer", whiteSpace: "nowrap", fontFamily: "inherit", transition: "color 0.15s" }),
+  page:     { maxWidth: 880, margin: "0 auto", padding: "2rem 1rem" } as React.CSSProperties,
+  card:     { background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "1.25rem" } as React.CSSProperties,
+  input:    { background: "#0a1220", border: `1px solid ${C.border}`, borderRadius: 9, padding: "10px 14px", color: C.text, fontSize: 14, width: "100%", outline: "none", fontFamily: "inherit", boxSizing: "border-box" as const } as React.CSSProperties,
+  label:    { fontSize: 12, color: C.dim, marginBottom: 5, display: "block", fontWeight: 500 } as React.CSSProperties,
+  btn:      (color: string = C.accent): React.CSSProperties => ({ background: color, color: "#000", border: "none", borderRadius: 9, padding: "9px 18px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
+  btnGhost: (color: string = C.accent): React.CSSProperties => ({ background: "transparent", color, border: `1px solid ${color}55`, borderRadius: 9, padding: "8px 14px", fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
   badge:    (color: string): React.CSSProperties => ({ background: color + "20", color, border: `1px solid ${color}40`, borderRadius: 6, padding: "2px 8px", fontSize: 11, fontWeight: 700, display: "inline-block", whiteSpace: "nowrap" as const }),
-  postCard: (accent = C.accent): React.CSSProperties => ({ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "1rem 1.2rem", marginBottom: 10 }),
+  postCard: (accent: string = C.accent): React.CSSProperties => ({ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "1rem 1.2rem", marginBottom: 10 }),
   errorBox: { background: "#2a0a0a", border: `1px solid ${C.red}40`, borderRadius: 8, padding: "10px 14px", fontSize: 13, color: C.red, marginTop: 10 } as React.CSSProperties,
 };
 
@@ -470,17 +470,13 @@ function ChatPage({ auth }: { auth: AuthState }) {
     setLoading(true);
     setMsgs([]);
     joinRoom(room);
-
     chatAPI.messages(room)
       .then(data => setMsgs(data))
       .catch(() => {})
       .finally(() => setLoading(false));
-
-    // Socket.io 실시간 수신 — 낙관적 UI와 중복 방지
     const off = onReceiveMessage(msg => {
       setMsgs(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg]);
     });
-
     return () => { off(); leaveRoom(room); };
   }, [room]);
 
@@ -490,7 +486,6 @@ function ChatPage({ auth }: { auth: AuthState }) {
     const text = input.trim();
     if (!text || !auth.userId) return;
     setInput("");
-    // 낙관적 UI
     setMsgs(prev => [...prev, { id: Date.now(), room, author_id: auth.userId!, author_name: myName, content: text, created_at: new Date().toISOString() }]);
     chatAPI.send(room, text, myName, auth.userId);
   };
