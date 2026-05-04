@@ -31,21 +31,21 @@ const C = {
   bg: "#080c14", surface: "#0f1623", card: "#141d2e", border: "#1e2d45",
   accent: "#38bdf8", purple: "#a78bfa", green: "#34d399", yellow: "#fbbf24",
   red: "#f87171", text: "#e2e8f0", muted: "#64748b", dim: "#94a3b8",
-};
+} as const;
 
 const css = {
-  app:      { minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Pretendard Variable','Pretendard','Noto Sans KR',sans-serif" } as React.CSSProperties,
-  nav:      { background: C.surface, borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", overflowX: "auto" as const, position: "sticky" as const, top: 0, zIndex: 100, padding: "0 12px", gap: 2 } as React.CSSProperties,
-  logo:     { padding: "14px 10px", fontWeight: 800, fontSize: 17, color: C.accent, whiteSpace: "nowrap" as const, flexShrink: 0, marginRight: 6 } as React.CSSProperties,
-  tab:      (a: boolean): React.CSSProperties => ({ padding: "14px 11px", fontSize: 13, fontWeight: a ? 700 : 400, color: a ? C.accent : C.muted, borderBottom: `2px solid ${a ? C.accent : "transparent"}`, background: "none", border: "none", cursor: "pointer", whiteSpace: "nowrap", fontFamily: "inherit", transition: "color 0.15s" }),
-  page:     { maxWidth: 880, margin: "0 auto", padding: "2rem 1rem" } as React.CSSProperties,
-  card:     { background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "1.25rem" } as React.CSSProperties,
-  input:    { background: "#0a1220", border: `1px solid ${C.border}`, borderRadius: 9, padding: "10px 14px", color: C.text, fontSize: 14, width: "100%", outline: "none", fontFamily: "inherit", boxSizing: "border-box" as const } as React.CSSProperties,
-  label:    { fontSize: 12, color: C.dim, marginBottom: 5, display: "block", fontWeight: 500 } as React.CSSProperties,
-  btn:      (color: string = C.accent): React.CSSProperties => ({ background: color, color: "#000", border: "none", borderRadius: 9, padding: "9px 18px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
-  btnGhost: (color: string = C.accent): React.CSSProperties => ({ background: "transparent", color, border: `1px solid ${color}55`, borderRadius: 9, padding: "8px 14px", fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
+  app:  { minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Pretendard Variable','Pretendard','Noto Sans KR',sans-serif" } as React.CSSProperties,
+  nav:  { background: C.surface, borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", overflowX: "auto" as const, position: "sticky" as const, top: 0, zIndex: 100, padding: "0 12px", gap: 2 } as React.CSSProperties,
+  logo: { padding: "14px 10px", fontWeight: 800, fontSize: 17, color: C.accent, whiteSpace: "nowrap" as const, flexShrink: 0, marginRight: 6 } as React.CSSProperties,
+  tab:  (a: boolean): React.CSSProperties => ({ padding: "14px 11px", fontSize: 13, fontWeight: a ? 700 : 400, color: a ? C.accent : C.muted, borderBottom: `2px solid ${a ? C.accent : "transparent"}`, background: "none", border: "none", cursor: "pointer", whiteSpace: "nowrap", fontFamily: "inherit", transition: "color 0.15s" }),
+  page: { maxWidth: 880, margin: "0 auto", padding: "2rem 1rem" } as React.CSSProperties,
+  card: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "1.25rem" } as React.CSSProperties,
+  input: { background: "#0a1220", border: `1px solid ${C.border}`, borderRadius: 9, padding: "10px 14px", color: C.text, fontSize: 14, width: "100%", outline: "none", fontFamily: "inherit", boxSizing: "border-box" as const } as React.CSSProperties,
+  label: { fontSize: 12, color: C.dim, marginBottom: 5, display: "block", fontWeight: 500 } as React.CSSProperties,
+  btn:      (color = C.accent): React.CSSProperties => ({ background: color, color: "#000", border: "none", borderRadius: 9, padding: "9px 18px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
+  btnGhost: (color = C.accent): React.CSSProperties => ({ background: "transparent", color, border: `1px solid ${color}55`, borderRadius: 9, padding: "8px 14px", fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }),
   badge:    (color: string): React.CSSProperties => ({ background: color + "20", color, border: `1px solid ${color}40`, borderRadius: 6, padding: "2px 8px", fontSize: 11, fontWeight: 700, display: "inline-block", whiteSpace: "nowrap" as const }),
-  postCard: (accent: string = C.accent): React.CSSProperties => ({ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "1rem 1.2rem", marginBottom: 10 }),
+  postCard: (accent = C.accent): React.CSSProperties => ({ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "1rem 1.2rem", marginBottom: 10 }),
   errorBox: { background: "#2a0a0a", border: `1px solid ${C.red}40`, borderRadius: 8, padding: "10px 14px", fontSize: 13, color: C.red, marginTop: 10 } as React.CSSProperties,
 };
 
@@ -470,13 +470,17 @@ function ChatPage({ auth }: { auth: AuthState }) {
     setLoading(true);
     setMsgs([]);
     joinRoom(room);
+
     chatAPI.messages(room)
       .then(data => setMsgs(data))
       .catch(() => {})
       .finally(() => setLoading(false));
+
+    // Socket.io ?ㅼ떆媛??섏떊 ???숆???UI? 以묐났 諛⑹?
     const off = onReceiveMessage(msg => {
       setMsgs(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg]);
     });
+
     return () => { off(); leaveRoom(room); };
   }, [room]);
 
@@ -486,6 +490,7 @@ function ChatPage({ auth }: { auth: AuthState }) {
     const text = input.trim();
     if (!text || !auth.userId) return;
     setInput("");
+    // ?숆???UI
     setMsgs(prev => [...prev, { id: Date.now(), room, author_id: auth.userId!, author_name: myName, content: text, created_at: new Date().toISOString() }]);
     chatAPI.send(room, text, myName, auth.userId);
   };
@@ -724,9 +729,9 @@ function CommunityPage({ auth }: { auth: AuthState }) {
 // ??? ??猷⑦듃 ??????????????????????????????????????????????????????????????????
 
 export default function App() {
-  const [tab, setTab]              = useState<TabId>("home");
-  const [auth, setAuth]            = useState<AuthState>({ userId: null, email: null, profile: null, token: null });
-  const [authLoading, setAuthLoad] = useState(true);
+  const [tab, setTab]             = useState<TabId>("home");
+  const [auth, setAuth]           = useState<AuthState>({ userId: null, email: null, profile: null, token: null });
+  const [authLoading, setAuthLoad]= useState(true);
 
   useEffect(() => {
     const token = tokenStorage.getAccess();
@@ -748,13 +753,8 @@ export default function App() {
     setAuth({ userId: null, email: null, profile: null, token: null });
   }, []);
 
-  if (authLoading) return (
-    <div style={{ ...css.app, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <Spinner />
-    </div>
-  );
+  if (authLoading) return <div style={{ ...css.app, display: "flex", alignItems: "center", justifyContent: "center" }}><Spinner /></div>;
 
-  // JSX.Element ???React.ReactElement ?ъ슜 (react-jsx 紐⑤뱶 ?명솚)
   const pages: Record<TabId, React.ReactElement> = {
     home:      <HomePage      auth={auth} setTab={setTab} />,
     auth:      <AuthPage      auth={auth} onLogin={handleLogin} onLogout={handleLogout} />,
@@ -771,11 +771,7 @@ export default function App() {
     <div style={css.app}>
       <nav style={css.nav}>
         <div style={css.logo}>?럨 ?곕━?숆탳</div>
-        {TABS.map(t => (
-          <button key={t.id} style={css.tab(tab === t.id)} onClick={() => setTab(t.id)}>
-            {t.label}
-          </button>
-        ))}
+        {TABS.map(t => <button key={t.id} style={css.tab(tab === t.id)} onClick={() => setTab(t.id)}>{t.label}</button>)}
         {auth.userId && (
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, flexShrink: 0, paddingLeft: 8 }}>
             <span style={css.badge(C.green)}>
@@ -789,4 +785,3 @@ export default function App() {
     </div>
   );
 }
-
